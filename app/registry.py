@@ -92,23 +92,18 @@ class QuestionSet:
 # Chat-Typ-Plugin-Interface
 # =============================================================================
 
-class ChatTypePlugin(Protocol):
-    """Interface für Chat-Typ-Plugins.
+@dataclass
+class ChatTypePlugin:
+    """Plugin für Chat-Typen.
 
     Jedes Modul in chat_types/ muss ein Objekt namens 'plugin'
-    exportieren, das diesem Interface entspricht.
+    exportieren, das eine Instanz dieser Klasse ist.
     """
 
     chat_type: ChatType
     question_set: QuestionSet
-
-    def on_pre_init(self, context: dict[str, Any]) -> dict[str, Any]:
-        """Wird VOR der Initialisierung aufgerufen. Kann Kontext anreichern."""
-        ...
-
-    def on_post_init(self, chat_id: str, context: dict[str, Any]) -> None:
-        """Wird NACH der Initialisierung aufgerufen."""
-        ...
+    on_pre_init: Callable[[dict[str, Any]], dict[str, Any]] | None = None
+    on_post_init: Callable[[str, dict[str, Any]], None] | None = None
 
 
 # =============================================================================
