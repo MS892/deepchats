@@ -1,0 +1,39 @@
+# Bytecode
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
+.coverage.*
+
+# Linting
+.ruff_cache/
+
+# Environment
+.env
+.env.local
+
+# OS
+Thumbs.db
+.DS_Store
+
+# deepchats runtime (not in repo, lives in DEEPCHATS_HOME)
+*.db-journal
+*.db-wal

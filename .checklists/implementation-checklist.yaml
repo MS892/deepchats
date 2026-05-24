@@ -1,0 +1,776 @@
+# =============================================================================
+# deepchats — Maximale granulare Implementierungs-Checkliste
+# Version: 1.0.0
+# Erstellt: 2026-05-24T22:41:00+02:00
+# Format: YAML mit hierarchischen Tasks, Status, Dependencies
+# =============================================================================
+
+meta:
+  project: deepchats
+  description: >
+    Vollständige Implementierung des Chat-Hypervisor-Systems inklusive
+    SQLite-Registry, KG-Integration, extensiblem Modul-System,
+    interaktivem Init-Prozess und Post-Chat-Analyse.
+  total_tasks_estimated: 89
+  created_at: "2026-05-24T22:41:00+02:00"
+
+phases:
+  - id: phase-0
+    name: "Phase 0: Vorbereitung & Entscheidungsfindung"
+    status: in_progress
+    tasks:
+      - id: "0.1"
+        name: "GitHub-Repository 'deepchats' erstellen"
+        status: done
+        tool: github
+        description: "Repository auf github.com/MS892/deepchats anlegen mit README, public"
+        acceptance: "Repo existiert unter https://github.com/MS892/deepchats"
+
+      - id: "0.2"
+        name: "Lokales Repository klonen nach E:\\git\\deepchats"
+        status: done
+        tool: git
+        description: "Git-Clone des leeren Repos in lokales Arbeitsverzeichnis"
+        acceptance: "Verzeichnis E:\\git\\deepchats existiert mit .git"
+
+      - id: "0.3"
+        name: "Verzeichnisstruktur anlegen"
+        status: done
+        tool: filesystem
+        description: >
+          Erstelle folgende Verzeichnisse:
+          - docs/           (Dokumentation)
+          - .checklists/    (Checklisten für alle Tasks)
+          - .decisions/     (Entscheidungsdokumentation mit Timestamps)
+          - app/            (Hauptanwendungscode)
+          - app/chat_types/ (Plugin-artige Chat-Typ-Module)
+          - app/post_processors/ (Post-Chat-Prozessoren)
+          - scripts/        (Shell-Skripte)
+          - tests/          (Test-Suite)
+        acceptance: "Alle Verzeichnisse existieren"
+
+      - id: "0.4"
+        name: "Entscheidung #001 dokumentieren: Architektur-Stil"
+        status: in_progress
+        tool: filesystem
+        description: >
+          Dokumentiere die Wahl des Architekturstils (modular-monolithisch mit
+          Plugin-Registry für Chat-Typen), Begründung, Alternativen, Decision Tree.
+        acceptance: "Datei .decisions/20260524_224100_001-architecture-style.md existiert"
+
+      - id: "0.5"
+        name: "Entscheidung #002 dokumentieren: Datenbank-Technologie"
+        status: pending
+        tool: filesystem
+        description: >
+          SQLite als Embedded-DB gewählt. Dokumentiere Begründung (zero-config,
+          portabel, MCP-integriert), Alternativen (PostgreSQL, JSON-Files),
+          Trade-offs.
+        acceptance: "Datei .decisions/20260524_224200_002-database-technology.md existiert"
+
+      - id: "0.6"
+        name: "Entscheidung #003 dokumentieren: Programmiersprache"
+        status: pending
+        tool: filesystem
+        description: >
+          Python als Implementierungssprache. Begründung (MCP-Integration,
+          schnelle Iteration, ausreichend für CLI-Tool), Alternativen (Rust, Go).
+        acceptance: "Datei .decisions/20260524_224300_003-language-choice.md existiert"
+
+      - id: "0.7"
+        name: "Entscheidung #004 dokumentieren: Hypervisor-Verzeichnis-Pfad"
+        status: pending
+        tool: filesystem
+        description: >
+          C:\Users\mschm\.deepcode\projects\chats als Hypervisor-Root.
+          Konfigurierbar via Environment-Variable DEEPCHATS_HOME.
+        acceptance: "Datei .decisions/20260524_224400_004-hypervisor-path.md existiert"
+
+      - id: "0.8"
+        name: "Entscheidung #005 dokumentieren: Namensschema-Format"
+        status: pending
+        tool: filesystem
+        description: >
+          YYYYMMDD_HHMMSS_[Typ]_[Thema]_[Aufgabe] als Verzeichnisnamen-Format.
+          Diskussion von Alternativen, Unicode-Handling, Längenbeschränkungen.
+        acceptance: "Datei .decisions/20260524_224500_005-naming-schema.md existiert"
+
+      - id: "0.9"
+        name: "Maximale granulare Checkliste erstellen (diese Datei)"
+        status: in_progress
+        tool: filesystem
+        description: "Diese YAML-Checkliste mit allen 89+ Tasks"
+        acceptance: "Diese Datei ist vollständig und valide"
+
+  - id: phase-1
+    name: "Phase 1: Projekt-Scaffolding & Konfiguration"
+    status: pending
+    depends_on: ["phase-0"]
+    tasks:
+      - id: "1.1"
+        name: "pyproject.toml erstellen"
+        status: pending
+        tool: filesystem
+        description: >
+          Python-Projektkonfiguration mit:
+          - name: deepchats
+          - version: 0.1.0
+          - python>=3.11
+          - dependencies: typer, rich, pydantic, sqlite-utils
+          - dev-dependencies: pytest, pytest-cov, ruff
+          - scripts: deepchats = app.cli:app
+        acceptance: "pyproject.toml ist valide und enthält alle Dependencies"
+
+      - id: "1.2"
+        name: ".gitignore erstellen"
+        status: pending
+        tool: filesystem
+        description: >
+          Ignoriere: __pycache__, .pytest_cache, .ruff_cache,
+          *.pyc, .env, dist/, *.egg-info/, venv/
+        acceptance: ".gitignore existiert mit sinnvollen Patterns"
+
+      - id: "1.3"
+        name: "app/__init__.py erstellen"
+        status: pending
+        tool: filesystem
+        description: "Package-Initialisierung mit Version-String"
+        acceptance: "app/__init__.py existiert"
+
+      - id: "1.4"
+        name: "app/chat_types/__init__.py erstellen"
+        status: pending
+        tool: filesystem
+        description: "Package-Initialisierung für Chat-Typ-Plugins"
+        acceptance: "Datei existiert"
+
+      - id: "1.5"
+        name: "app/post_processors/__init__.py erstellen"
+        status: pending
+        tool: filesystem
+        description: "Package-Initialisierung für Post-Processing-Plugins"
+        acceptance: "Datei existiert"
+
+      - id: "1.6"
+        name: "tests/__init__.py erstellen"
+        status: pending
+        tool: filesystem
+        description: "Test-Package-Initialisierung"
+        acceptance: "Datei existiert"
+
+      - id: "1.7"
+        name: "scripts/init-chat.sh erstellen (Shell-Wrapper)"
+        status: pending
+        tool: filesystem
+        description: "Bash-Skript das deepchats-CLI aufruft, als Convenience-Wrapper"
+        acceptance: "Skript existiert und ist ausführbar"
+
+  - id: phase-2
+    name: "Phase 2: Wissenschaftliche Dokumentation"
+    status: pending
+    depends_on: ["phase-0"]
+    tasks:
+      - id: "2.1"
+        name: "docs/concept-general.md schreiben"
+        status: pending
+        tool: filesystem
+        description: >
+          Allgemeingültige, wissenschaftlich geprägte Abhandlung über:
+          - Chat-Kontext-Hypervisor als Konzept
+          - Taxonomie von KI-Chat-Interaktionen
+          - Selbst-organisierende Wissensstrukturen
+          - Metakognitive Prozesse in Mensch-KI-Kollaboration
+          - Formale Definitionen aller Entitäten
+          - Literaturbezüge wo möglich
+          - Abstrakte Architektur, unabhängig von unserer Implementierung
+          Mindestens 1500 Wörter.
+        acceptance: "Dokument >1500 Wörter, wissenschaftlicher Stil, allgemeingültig"
+
+      - id: "2.2"
+        name: "docs/concept-specific.md schreiben"
+        status: pending
+        tool: filesystem
+        description: >
+          Konkrete, detaillierte Beschreibung UNSERER Implementierung:
+          - Exakte Verzeichnisstruktur mit Begründung
+          - SQLite-Schema mit allen Tabellen & Relationen
+          - Chat-Typ-Taxonomie mit jeder Kategorie definiert
+          - Init-Prozess Schritt für Schritt
+          - Post-Chat-Prozess Schritt für Schritt
+          - Extension-API für neue Module
+          - Konfigurations-Variablen
+          - Beispiele für jeden Chat-Typ
+          Mindestens 2500 Wörter.
+        acceptance: "Dokument >2500 Wörter, implementierungsspezifisch, alle Details"
+
+      - id: "2.3"
+        name: "README.md aktualisieren"
+        status: pending
+        tool: filesystem
+        description: >
+          Projektdokumentation mit:
+          - Kurzbeschreibung
+          - Installation
+          - Schnellstart
+          - Verweis auf docs/
+        acceptance: "README.md existiert und ist informativ"
+
+  - id: phase-3
+    name: "Phase 3: Typ-System & Modul-Registry (Kern-Architektur)"
+    status: pending
+    depends_on: ["phase-1"]
+    tasks:
+      - id: "3.1"
+        name: "app/types.py — ChatType Enum definieren"
+        status: pending
+        tool: filesystem
+        description: >
+          StrEnum mit allen Chat-Typen:
+          AKTION: code, debug, refactor, review, deploy, test, setup
+          WISSEN: guide, research, design, analyze, learn, docs
+          META: plan, chat, meta
+          Jeder Enum-Wert hat: category, description_de, description_en,
+          icon, example_tasks[], default_questions[]
+        acceptance: "ChatType Enum vollständig mit allen 16 Typen und Metadaten"
+
+      - id: "3.2"
+        name: "app/types.py — ChatCategory Enum definieren"
+        status: pending
+        tool: filesystem
+        description: "AKTION, WISSEN, META als Kategorien mit Beschreibung"
+        acceptance: "Enum existiert und ist mit ChatType verknüpft"
+
+      - id: "3.3"
+        name: "app/types.py — ChatMetadata Pydantic-Modell"
+        status: pending
+        tool: filesystem
+        description: >
+          Pydantic BaseModel mit allen Chat-Metadaten:
+          id, name, chat_type, topic, task, created_at, updated_at,
+          tags[], status, repo_url, language, framework, priority,
+          parent_chat_id, related_chat_ids[]
+        acceptance: "Modell ist valide mit Type-Validierung"
+
+      - id: "3.4"
+        name: "app/registry.py — TypeRegistry Klasse"
+        status: pending
+        tool: filesystem
+        description: >
+          Zentrales Registry-Pattern für:
+          - Registrierung neuer Chat-Typen
+          - Abfrage aller Typen/Kategorien
+          - Mapping Typ → Fragen-Templates
+          - Mapping Typ → Post-Processoren
+          - Discovery von Plugin-Modulen in chat_types/
+        acceptance: "Registry unterstützt dynamische Erweiterung ohne Core-Änderungen"
+
+      - id: "3.5"
+        name: "app/registry.py — QuestionTemplate Klasse"
+        status: pending
+        tool: filesystem
+        description: >
+          Frage-Template-System:
+          - Fixe Fragen pro Typ
+          - Konditionale Fragen (nur wenn Bedingung erfüllt)
+          - KI-generierte Zusatzfragen via Callback
+          - Validierung der Antworten
+        acceptance: "Fragen-System funktioniert für alle Typen"
+
+      - id: "3.6"
+        name: "app/registry.py — PostProcessorRegistry Klasse"
+        status: pending
+        tool: filesystem
+        description: "Registry für Post-Chat-Verarbeitungsschritte pro Typ"
+        acceptance: "Post-Processoren können pro Typ registriert werden"
+
+  - id: phase-4
+    name: "Phase 4: SQLite-Datenbank (Persistenz-Schicht)"
+    status: pending
+    depends_on: ["phase-3"]
+    tasks:
+      - id: "4.1"
+        name: "app/db.py — Datenbank-Schema-Design dokumentieren"
+        status: pending
+        tool: filesystem
+        description: >
+          Tabellen:
+          - chats (id TEXT PK, name TEXT, chat_type TEXT, topic TEXT, task TEXT,
+            created_at TEXT, updated_at TEXT, status TEXT, repo_url TEXT,
+            language TEXT, framework TEXT, priority INTEGER, parent_chat_id TEXT,
+            dir_path TEXT, metadata_json TEXT)
+          - tags (id INTEGER PK, name TEXT UNIQUE, category TEXT)
+          - chat_tags (chat_id TEXT FK, tag_id INTEGER FK)
+          - chat_links (source_chat_id TEXT FK, target_chat_id TEXT FK,
+            link_type TEXT, weight REAL)
+          - decisions (id INTEGER PK, chat_id TEXT FK, timestamp TEXT,
+            title TEXT, content TEXT, importance TEXT, decision_tree TEXT)
+          - checklists (id INTEGER PK, chat_id TEXT FK, created_at TEXT,
+            content TEXT, status TEXT)
+        acceptance: "Schema vollständig dokumentiert"
+
+      - id: "4.2"
+        name: "app/db.py — Datenbank-Initialisierung"
+        status: pending
+        tool: filesystem
+        description: >
+          Funktionen:
+          - init_db(db_path) → Erstellt Tabellen wenn nicht existent
+          - get_db_path() → Ermittelt Pfad aus Env/Konfig
+          - migrate(db_path) → Schema-Migrationen
+        acceptance: "Datenbank wird korrekt initialisiert"
+
+      - id: "4.3"
+        name: "app/db.py — Chat-CRUD Operationen"
+        status: pending
+        tool: filesystem
+        description: >
+          - create_chat(metadata) → str (chat_id)
+          - get_chat(chat_id) → ChatMetadata
+          - update_chat(chat_id, updates)
+          - delete_chat(chat_id)
+          - list_chats(filters) → List[ChatMetadata]
+          - search_chats(query) → List[ChatMetadata]
+          - get_chats_by_type(chat_type) → List[ChatMetadata]
+          - get_chats_by_topic(topic) → List[ChatMetadata]
+          - get_recent_chats(limit) → List[ChatMetadata]
+        acceptance: "Alle CRUD-Operationen funktionieren"
+
+      - id: "4.4"
+        name: "app/db.py — Tag-Operationen"
+        status: pending
+        tool: filesystem
+        description: >
+          - add_tag(name, category)
+          - tag_chat(chat_id, tag_name)
+          - untag_chat(chat_id, tag_name)
+          - get_chat_tags(chat_id) → List[str]
+          - get_chats_by_tag(tag_name) → List[ChatMetadata]
+          - suggest_tags(chat_id) → List[str] (basierend auf Topic/Task)
+        acceptance: "Tag-System voll funktionsfähig"
+
+      - id: "4.5"
+        name: "app/db.py — Link-Operationen"
+        status: pending
+        tool: filesystem
+        description: >
+          - link_chats(source, target, link_type, weight)
+          - unlink_chats(source, target)
+          - get_linked_chats(chat_id) → List[ChatMetadata]
+          - get_chat_graph() → Netzwerk-Struktur
+        acceptance: "Chat-Verknüpfungen funktionieren"
+
+      - id: "4.6"
+        name: "app/db.py — Decisions-CRUD"
+        status: pending
+        tool: filesystem
+        description: >
+          - create_decision(chat_id, title, content, importance)
+          - get_decisions(chat_id) → List
+          - get_decision_tree(chat_id) → Baum-Struktur
+        acceptance: "Decisions-Operationen funktionieren"
+
+      - id: "4.7"
+        name: "app/db.py — Checklists-CRUD"
+        status: pending
+        tool: filesystem
+        description: >
+          - create_checklist(chat_id, content)
+          - get_checklist(chat_id) → letzte Version
+          - update_checklist_status(chat_id, task_id, status)
+        acceptance: "Checklist-Operationen funktionieren"
+
+  - id: phase-5
+    name: "Phase 5: Init-Chat Modul (Kernprozess)"
+    status: pending
+    depends_on: ["phase-4"]
+    tasks:
+      - id: "5.1"
+        name: "app/questions.py — FixedQuestionEngine"
+        status: pending
+        tool: filesystem
+        description: >
+          Engine für strukturierte Fragen:
+          - Lädt Fragen-Templates aus TypeRegistry
+          - Präsentiert Fragen interaktiv via Rich
+          - Validiert Antworten
+          - Erlaubt Zurück/Überspringen
+        acceptance: "Fixe Fragen werden korrekt gestellt und validiert"
+
+      - id: "5.2"
+        name: "app/questions.py — AIAnticipatedQuestionEngine"
+        status: pending
+        tool: filesystem
+        description: >
+          KI-gestützte Zusatzfragen:
+          - Analysiert gegebene Antworten
+          - Schlägt 2-4 kontextrelevante Zusatzfragen vor
+          - Basiert auf Chat-Typ + Topic + Task
+          - Nutzt LLM via Prompt-Template
+          - Lerner-Effekt: erfolgreiche Fragen werden gewichtet
+        acceptance: "KI-Fragen sind kontextrelevant und hilfreich"
+
+      - id: "5.3"
+        name: "app/init_chat.py — DirectoryCreator"
+        status: pending
+        tool: filesystem
+        description: >
+          Erstellt Chat-Verzeichnis:
+          - Generiert Name nach Schema: YYYYMMDD_HHMMSS_[Typ]_[Thema]_[Aufgabe]
+          - Sanitized Dateinamen (keine Sonderzeichen)
+          - Erstellt Unterverzeichnisse: .checklists, .decisions
+          - Erstellt initiale Dateien: README.md, .chatconfig.yaml
+        acceptance: "Verzeichnis wird korrekt mit allen Unterstrukturen erstellt"
+
+      - id: "5.4"
+        name: "app/init_chat.py — RegistryEntryCreator"
+        status: pending
+        tool: filesystem
+        description: >
+          Erstellt Datenbank-Einträge:
+          - Chat in 'chats' Tabelle
+          - Initiale Tags
+          - Verknüpfungen zu ähnlichen Chats
+          - Initiale leere Checkliste
+        acceptance: "Alle DB-Einträge werden korrekt erstellt"
+
+      - id: "5.5"
+        name: "app/init_chat.py — KnowledgeGraphIntegrator"
+        status: pending
+        tool: memory
+        description: >
+          Erstellt KG-Nodes:
+          - Chat Node mit Metadaten
+          - Verknüpfung zu Repo-Node
+          - Verknüpfung zu vorherigen Chats
+          - Typ-Relation
+        acceptance: "KG-Nodes werden erstellt (wenn MCP-Memory verfügbar)"
+
+      - id: "5.6"
+        name: "app/init_chat.py — Haupt-Init-Funktion"
+        status: pending
+        tool: filesystem
+        description: >
+          Orchestriert den gesamten Init-Prozess:
+          1. Pre-Check (Git-Repo, letzte Chats)
+          2. Feste Fragen stellen
+          3. KI-Zusatzfragen stellen
+          4. Verzeichnis erstellen
+          5. Registry-Eintrag erstellen
+          6. KG-Node erstellen
+          7. Zusammenfassung ausgeben
+        acceptance: "Vollständiger Init-Prozess läuft fehlerfrei durch"
+
+  - id: phase-6
+    name: "Phase 6: Post-Chat Modul (Analyse & Lernen)"
+    status: pending
+    depends_on: ["phase-5"]
+    tasks:
+      - id: "6.1"
+        name: "app/post_processors/base.py — BasePostProcessor"
+        status: pending
+        tool: filesystem
+        description: >
+          Abstrakte Basisklasse:
+          - process(chat_id, context) → PostProcessResult
+          - requires_llm: bool
+          - priority: int
+        acceptance: "Basisklasse definiert Interface"
+
+      - id: "6.2"
+        name: "app/post_processors/tagger.py — AutoTagger"
+        status: pending
+        tool: filesystem
+        description: >
+          Automatische Verschlagwortung:
+          - Extrahiert Keywords aus Chat-Inhalt
+          - Schlägt Tags vor (bestätigungspflichtig)
+          - Lernt aus manuellen Korrekturen
+        acceptance: "AutoTagger schlägt relevante Tags vor"
+
+      - id: "6.3"
+        name: "app/post_processors/similarity.py — SimilarityMatcher"
+        status: pending
+        tool: filesystem
+        description: >
+          Ähnlichkeitsanalyse:
+          - Vergleicht Tags, Topic, Task mit existierenden Chats
+          - Berechnet Ähnlichkeits-Score
+          - Erstellt Link-Vorschläge
+          - Nutzt einfaches TF-IDF oder Tag-Overlap
+        acceptance: "Ähnliche Chats werden korrekt erkannt"
+
+      - id: "6.4"
+        name: "app/post_processors/metrics.py — MetricsCollector"
+        status: pending
+        tool: filesystem
+        description: >
+          Metrik-Erfassung:
+          - Chat-Dauer
+          - Anzahl Nachrichten
+          - Outcome (success/partial/failed)
+          - Zufriedenheit (explizit/implizit)
+        acceptance: "Metriken werden erfasst und gespeichert"
+
+      - id: "6.5"
+        name: "app/post_chat.py — Haupt-Post-Chat-Funktion"
+        status: pending
+        tool: filesystem
+        description: >
+          Orchestriert Post-Processing:
+          1. Alle registrierten PostProcessoren laden
+          2. Nach Priorität ausführen
+          3. Ergebnisse zusammenführen
+          4. Datenbank aktualisieren
+        acceptance: "Post-Chat-Prozess läuft komplett durch"
+
+  - id: phase-7
+    name: "Phase 7: CLI-Interface (Benutzer-Interaktion)"
+    status: pending
+    depends_on: ["phase-6"]
+    tasks:
+      - id: "7.1"
+        name: "app/cli.py — Typer App Grundgerüst"
+        status: pending
+        tool: filesystem
+        description: >
+          Typer-CLI mit Commands:
+          - init (Hauptbefehl)
+          - list
+          - show
+          - search
+          - tag
+          - link
+          - stats
+          - config
+        acceptance: "CLI-App startet und zeigt Hilfe"
+
+      - id: "7.2"
+        name: "app/cli.py — 'init' Command"
+        status: pending
+        tool: filesystem
+        description: >
+          Interaktiver Init-Prozess:
+          - --type (optional, sonst interaktiv)
+          - --topic (optional)
+          - --task (optional)
+          - --non-interactive (für Scripting)
+        acceptance: "init-Command funktioniert interaktiv und nicht-interaktiv"
+
+      - id: "7.3"
+        name: "app/cli.py — 'list' Command"
+        status: pending
+        tool: filesystem
+        description: >
+          Auflistung aller Chats:
+          - --type Filter
+          - --topic Filter
+          - --recent N
+          - --format (table/json)
+          - Rich-Tabelle mit Farben
+        acceptance: "list-Command zeigt Chats übersichtlich an"
+
+      - id: "7.4"
+        name: "app/cli.py — 'show' Command"
+        status: pending
+        tool: filesystem
+        description: >
+          Details eines Chats anzeigen:
+          - Metadaten
+          - Tags
+          - Verknüpfungen
+          - Checklisten-Status
+          - Decisions
+        acceptance: "show-Command zeigt vollständige Chat-Details"
+
+      - id: "7.5"
+        name: "app/cli.py — 'search' Command"
+        status: pending
+        tool: filesystem
+        description: >
+          Volltextsuche über Chats:
+          - Sucht in name, topic, task, tags
+          - Relevance-Ranking
+        acceptance: "search findet relevante Chats"
+
+      - id: "7.6"
+        name: "app/cli.py — 'tag' Command"
+        status: pending
+        tool: filesystem
+        description: "Tags hinzufügen/entfernen: deepchats tag <chat-id> --add tag1 --remove tag2"
+        acceptance: "tag-Command funktioniert"
+
+      - id: "7.7"
+        name: "app/cli.py — 'link' Command"
+        status: pending
+        tool: filesystem
+        description: "Chats verknüpfen: deepchats link <source-id> <target-id> --type related"
+        acceptance: "link-Command funktioniert"
+
+      - id: "7.8"
+        name: "app/cli.py — 'stats' Command"
+        status: pending
+        tool: filesystem
+        description: >
+          Statistiken:
+          - Chats pro Typ
+          - Aktivität über Zeit
+          - Meistgenutzte Tags
+          - Durchschnittliche Dauer
+        acceptance: "stats-Command zeigt sinnvolle Statistiken"
+
+      - id: "7.9"
+        name: "app/cli.py — 'config' Command"
+        status: pending
+        tool: filesystem
+        description: "Konfiguration anzeigen/setzen: DEEPCHATS_HOME, Preferences"
+        acceptance: "config-Command funktioniert"
+
+      - id: "7.10"
+        name: "app/cli.py — Rich-Output Formatierung"
+        status: pending
+        tool: filesystem
+        description: >
+          Schöne Konsolen-Ausgabe:
+          - Farben pro Chat-Typ
+          - Tabellen für Listen
+          - Panels für Details
+          - Progress-Bars für längere Operationen
+          - Emoji-Indikatoren
+        acceptance: "Ausgabe ist visuell ansprechend und lesbar"
+
+  - id: phase-8
+    name: "Phase 8: Testing & Qualitätssicherung"
+    status: pending
+    depends_on: ["phase-7"]
+    tasks:
+      - id: "8.1"
+        name: "tests/test_types.py — Typ-System Tests"
+        status: pending
+        tool: filesystem
+        description: >
+          Tests für:
+          - ChatType Enum Werte
+          - ChatCategory Zuordnung
+          - ChatMetadata Validation
+          - Serialisierung/Deserialisierung
+        acceptance: "Alle Typ-Tests grün"
+
+      - id: "8.2"
+        name: "tests/test_db.py — Datenbank-Tests"
+        status: pending
+        tool: filesystem
+        description: >
+          Tests für:
+          - Datenbank-Initialisierung
+          - Chat CRUD
+          - Tag CRUD
+          - Link CRUD
+          - Edge Cases (Duplikate, leere DB)
+        acceptance: "Alle DB-Tests grün, >90% Coverage"
+
+      - id: "8.3"
+        name: "tests/test_registry.py — Registry-Tests"
+        status: pending
+        tool: filesystem
+        description: >
+          Tests für:
+          - Typ-Registrierung
+          - Frage-Template-Resolution
+          - Plugin-Discovery
+          - Erweiterbarkeit (neuen Typ registrieren)
+        acceptance: "Alle Registry-Tests grün"
+
+      - id: "8.4"
+        name: "tests/test_init_chat.py — Init-Chat Tests"
+        status: pending
+        tool: filesystem
+        description: >
+          Tests für:
+          - Verzeichnis-Erstellung
+          - Namens-Generierung
+          - Registry-Eintrag
+          - Fehlerbehandlung
+        acceptance: "Init-Chat Tests grün"
+
+      - id: "8.5"
+        name: "tests/test_post_chat.py — Post-Chat Tests"
+        status: pending
+        tool: filesystem
+        description: "Tests für AutoTagger, SimilarityMatcher, MetricsCollector"
+        acceptance: "Post-Chat Tests grün"
+
+      - id: "8.6"
+        name: "tests/test_cli.py — CLI-Integration Tests"
+        status: pending
+        tool: filesystem
+        description: "Integrationstests für CLI-Commands via Typer TestClient"
+        acceptance: "CLI-Tests grün"
+
+      - id: "8.7"
+        name: "Ruff Linting konfigurieren & ausführen"
+        status: pending
+        tool: bash
+        description: "ruff check app/ tests/"
+        acceptance: "Keine Linting-Fehler"
+
+      - id: "8.8"
+        name: "Test-Coverage-Report erstellen"
+        status: pending
+        tool: bash
+        description: "pytest --cov=app --cov-report=term-missing"
+        acceptance: ">85% Gesamt-Coverage"
+
+  - id: phase-9
+    name: "Phase 9: Deployment & Finalisierung"
+    status: pending
+    depends_on: ["phase-8"]
+    tasks:
+      - id: "9.1"
+        name: "Initialen Commit erstellen & pushen"
+        status: pending
+        tool: git
+        description: "git add -A && git commit -m 'feat: complete deepchats hypervisor v0.1.0'"
+        acceptance: "Code ist auf GitHub"
+
+      - id: "9.2"
+        name: "deepchats im Hypervisor-Verzeichnis installieren"
+        status: pending
+        tool: bash
+        description: >
+          pip install -e E:/git/deepchats
+          deepchats config --set DEEPCHATS_HOME=C:/Users/mschm/.deepcode/projects/chats
+        acceptance: "deepchats CLI ist global verfügbar"
+
+      - id: "9.3"
+        name: "Ersten Test-Chat mit deepchats init erstellen"
+        status: pending
+        tool: bash
+        description: "deepchats init --type meta --topic deepchats --task 'hypervisor-test'"
+        acceptance: "Erster Chat erfolgreich initialisiert"
+
+      - id: "9.4"
+        name: "Post-Chat für diesen Chat ausführen"
+        status: pending
+        tool: bash
+        description: "deepchats post-chat <chat-id>"
+        acceptance: "Post-Processing läuft durch"
+
+      - id: "9.5"
+        name: "Abschließende Verifikation aller Komponenten"
+        status: pending
+        tool: all
+        description: >
+          - deepchats list funktioniert
+          - deepchats show <id> funktioniert
+          - deepchats search funktioniert
+          - deepchats stats funktioniert
+          - Datenbank ist konsistent
+          - Dokumentation ist vollständig
+        acceptance: "Alle Systeme funktionieren"
+
+      - id: "9.6"
+        name: "GitHub README mit Badges & Screenshots finalisieren"
+        status: pending
+        tool: github
+        description: "README mit CI-Badge, Coverage-Badge, Screenshots"
+        acceptance: "Repo-Präsenz ist professionell"
